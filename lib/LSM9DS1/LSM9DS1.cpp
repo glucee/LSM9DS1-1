@@ -2,7 +2,6 @@
 #define LSM9DS1_cpp
 #include<LSM9DS1.h>
 #define I2C_NOSTOP true
-#define Serial SerialUSB
 //===================================================================================================================
 //====== Set of useful function to access acceleration. gyroscope, magnetometer, and temperature data
 //===================================================================================================================
@@ -108,12 +107,12 @@ LSM9DS1_data LSM9DS1::capture() {
 	// in the LSM9DS0 sensor. This rotation can be modified to allow any convenient orientation convention.
 	// This is ok by aircraft orientation standards!
 	// Pass gyro rate as rad/s
-	//MadgwickQuaternionUpdate(ax, ay, az, gx*PI/180.0f, gy*PI/180.0f, gz*PI/180.0f,  -mx,  my, mz);
+	MadgwickQuaternionUpdate(ax, ay, az, gx*PI/180.0f, gy*PI/180.0f, gz*PI/180.0f,  -mx,  my, mz);
 	//MahonyQuaternionUpdate(ax, ay, az, gx*PI/180.0f, gy*PI/180.0f, gz*PI/180.0f, -mx, my, mz);
 
 	// Serial print and/or display at 0.5 s rate independent of data rates
 	delt_t = millis() - count;
-	if (delt_t > 500) { // update LCD once per half-second independent of read rate
+	if (delt_t > 10) { // update LCD once per half-second independent of read rate
 
 		if(SerialDebug) {
 			//Serial.print("ax = "); Serial.print((int)1000*ax);
@@ -131,9 +130,9 @@ LSM9DS1_data LSM9DS1::capture() {
 			//Serial.print(" qx = "); Serial.print(q[1]);
 			//Serial.print(" qy = "); Serial.print(q[2]);
 			//Serial.print(" qz = "); Serial.println(q[3]);
-			char info[128];
-			sprintf(info, "A:\t%.2f\t%.2f\t%.2f \tG:\t%.2f\t%.2f\t%.2f\r\n", 1000*ax,1000*ay,1000*az,1000*gx,1000*gy,1000*gz);
-			Serial.print(info);
+			//char info[128];
+			//sprintf(info, "A:\t%.2f\t%.2f\t%.2f \tG:\t%.2f\t%.2f\t%.2f\r\n", 1000*ax,1000*ay,1000*az,1000*gx,1000*gy,1000*gz);
+			//Serial.print(info);
 			//Serial.print("A ");Serial.print((int)1000*ax);Serial.print("\t");Serial.print((int)1000*ay);Serial.print("\t");Serial.print((int)1000*az,1);Serial.print("\t\t");
 			//Serial.print("G ");Serial.print((int)1000*gx,3);Serial.print("\t");Serial.print((int)1000*gy);Serial.print("\t");Serial.print((int)1000*gz);Serial.print("\t\t");
 			//Serial.print("M ");Serial.print((int)1000*mx);Serial.print("\t");Serial.print((int)1000*my);Serial.print("\t");Serial.print((int)1000*mz);Serial.print("\t\t");
@@ -167,16 +166,16 @@ LSM9DS1_data LSM9DS1::capture() {
 		pitch *= 180.0f / PI;
 		yaw   *= 180.0f / PI;
 		//yaw   -= 13.8f; // Declination at Danville, California is 13 degrees 48 minutes and 47 seconds on 2014-04-04
-		yaw -= 4.36f;
+		yaw -= 0.8f;
 		roll  *= 180.0f / PI;
 
 		if(SerialDebug) {
-			//Serial.print("Yaw, Pitch, Roll: ");
-			//Serial.print(yaw, 2);
-			//Serial.print(", ");
-			//Serial.print(pitch, 2);
-			//Serial.print(", ");
-			//Serial.println(roll, 2);
+			Serial.print("1 2 Orientation: ");
+			Serial.print(yaw, 2);
+			Serial.print(" ");
+			Serial.print(pitch, 2);
+			Serial.print(" ");
+			Serial.println(roll, 2);
 
 			//Serial.print("rate = "); Serial.print((float)sumCount/sum, 2); Serial.println(" Hz");
 		}
