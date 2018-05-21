@@ -9,14 +9,14 @@ int myLed  = 13;
 
 void setup()
 {
+  Serial.begin(38400);
+	Wire.begin();
   lsm9ds1 = new LSM9DS1();
-  delay(10000);
 
   // Set up the interrupt pin, its set as active high, push-pull
   //pinMode(intPin, INPUT);
   //pinMode(myLed, OUTPUT);
   //digitalWrite(myLed, HIGH);
-  lsm9ds1->init();
 }
 
 void loop()
